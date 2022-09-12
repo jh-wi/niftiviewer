@@ -22,7 +22,6 @@ public:
 		
 		for (int i = 0; i < n; i++) {
 			glm::ivec3 pos = GetVoxelPos(i, chunkSize - 1);
-			//std::cout << "voxelpos (" << i << "): " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
 			
 			glm::vec3 corners[] = {
 				pos,
@@ -47,14 +46,9 @@ public:
 			};
 			
 			int cubeIndex = CubeIndex(cornerDensities);
-			//std::cout << "cubeIndex (" << i << "): " << cubeIndex << std::endl;
 			int row = 15 * cubeIndex;
-			//std::cout << "row (" << i << "): " << row << ", val: " << TriangleTable[row] << std::endl;
-			
-			
 			
 			for (int t = 0; TriangleTable[row + t] != -1; t += 3) {
-				// std::cout << "TriangleTable row: " << row << '+' << t << std::endl;
 				int a0 = cornerIndexAFromEdge[TriangleTable[row + t]];
 				int b0 = cornerIndexBFromEdge[TriangleTable[row + t]];
 				
@@ -85,9 +79,8 @@ public:
 				q+=9;
 			}
 		}
-		//std::cout << "verts: " << vertices.size() / 3 << std::endl;
-		return SimpleMesh(vertices, indices);
 		
+		return SimpleMesh(vertices, indices);
 	}
 	
 	glm::ivec3 GetVoxelPos(int index, int _size) {
@@ -123,10 +116,9 @@ public:
 	
 	float GetDensity(glm::ivec3 pos, float* densities, int densitiesLength, int n, int chunkSize) {
 		int index = GetVoxelIndex(pos, chunkSize);
-		if (index >= 0 && index < densitiesLength) { //TODO: change 27 to the length of the densities array
+		if (index >= 0 && index < densitiesLength) {
 			return densities[index];
 		}
-		//std::cout << "GetDensity index: " << index << std::endl;
 		return 1;
 	}
 };

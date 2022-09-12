@@ -11,16 +11,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "core/camera.h"
-//#include "core/mesh.h"
-//#include "core/model.h"
 #include "isosurface/MarchingCubes.h"
 #include "testlib.h"
 
 void ProcessInput(GLFWwindow* window);
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 void MouseCallback(GLFWwindow* window, double posX, double posY);
-//int StartWindow() { return 17; }
-//int main();
 
 glm::vec3 camForward = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 camPos = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -47,21 +43,12 @@ float iso = 0;
 
 Camera cam(glm::vec3(0.0f, 0.0f, 3.0f));
 
-const char* const* const foo = nullptr;
-
-/*extern "C" {
-	int TestWindow() {
-		return StartWindow();
-	}
-}*/
-
 int main() {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	//glfwWindowHint(GLFW_DOUBLEBUFFER, GL_FALSE);
 	
 	lastX = windowX/2;
 	lastY = windowY/2;
@@ -92,14 +79,6 @@ int main() {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, MouseCallback);
 	
-	//std::cout << addfive(22) << std::endl;
-	
-	/*float vertices[] = {
-		-0.5f, -0.5f, 0, 1, 0.5f, 0, 0, 0,
-		-0.5f, 0.5f, 0, 0.5f, 1, 0, 0, 1,
-		0.5f, 0.5f, 0, 1, 1, 0, 1, 1,
-		0.5f, -0.5f, 0, 0.5f, 0.5f, 1, 1, 0
-	};*/
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
@@ -152,13 +131,7 @@ int main() {
 		0, 1, 2,
 		0, 2, 3
 	};
-	
-	/*float densities[] = {
-		1, 1, 1, 1, 1, 0.5f, 1, 1, 1,
-		1, 1, 1, 0.25f, 0, 1, 1, 1, 1,
-		1, 1, 1, 1, 1, 1, 1, 1, 1
-	};*/
-	
+
 	unsigned int texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -176,7 +149,6 @@ int main() {
 	
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-		//glGenerateMipmap(GL_TEXTURE_2D);
 	} else {
 		std::cout << "Error: Failed to load texture" << std::endl;
 	}
@@ -191,16 +163,8 @@ int main() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	
-	/*unsigned int EBO;
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
-	
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	//glEnableVertexAttribArray(1);
 	
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
@@ -210,15 +174,10 @@ int main() {
 	testShader.Use();
 	testShader.SetInt("tex", 0);
 	
-	//glm::vec3 camUp = glm::cross(camDir, camRight);
-	
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glEnable(GL_DEPTH_TEST);
 	
 	const float rad = 10;
-	
-	//char modelPath[] = "./assets/backpack/backpack.obj";
-	//Model backpack(modelPath);
 	
 	MarchingCubes mc;
 	
@@ -246,10 +205,6 @@ int main() {
 		densities[i] = (float)densities[i]/maxval;
 	}
 	
-	//for (int i = 134*256*256; i < 256*256*256; i++) {
-	//	densities[i] = 0;
-	//}
-	
 	
 	while (!glfwWindowShouldClose(window)) {
 		float currentFrame =  glfwGetTime();
@@ -267,18 +222,11 @@ int main() {
 		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
-		//triangle rendering
+		
 		testShader.Use();
 		
-		//glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-		/*glm::mat4 view = glm::mat4(1.0f);
-		float camX = sin(glfwGetTime()) * rad;
-		float camY = cos(glfwGetTime()) * rad;
-		view = glm::lookAt(camPos, camPos + camForward, camUp);*/
 		glm::mat4 view = cam.GetViewMatrix();
 		
-		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 		glm::mat4 projection = glm::mat4(1.0f);
 		projection = glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
 		//testShader.SetMat4("model", model);
@@ -286,7 +234,6 @@ int main() {
 		testShader.SetMat4("projection", projection);
 		
 		
-		//glDrawElements(GL_TRIANGLES, sizeof(indices)/sizeof(indices[0]), GL_UNSIGNED_INT, 0);
 		for (int x = 0; x < 10; x++) {
 			for (int y = 0; y < 10; y++) {
 				for (int z = 0; z < 10; z++) {
@@ -299,18 +246,6 @@ int main() {
 				}
 			}
 		}
-		
-		//backpack.Draw(testShader);
-		
-		//GUI rendering
-		/*ImGui::Begin("Rectangle Properties");
-		static float translation[2] = {0, 0};
-		ImGui::SliderFloat2("translation", translation, -1, 1);
-		testShader.SetVec2("translation", translation);
-		static float col[4] = {1, 1, 1, 1};
-		//ImGui::ColorEdit3("albedo", col);
-		//testShader.SetVec4("albedo", col);
-		ImGui::End();*/
 		
 		ImGui::Begin("Misc");
 		ImGui::InputFloat("camera speed", &camSpeed, 0.5f, 5.0f);
@@ -333,22 +268,6 @@ int main() {
 		
 		glBindVertexArray(VAO);
 		
-		//visualize densities
-		/*int chunkSize = d;
-		for (int x = 0; x < chunkSize; x++) {
-			for (int y = 0; y < chunkSize; y++) {
-				for (int z = 0; z < chunkSize; z++) {
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(x, y, z));
-					testShader.SetMat4("model", model);
-					float density = densities[MarchingCubes::GetVoxelIndex(glm::ivec3(x, y, z), chunkSize)];
-					float col2[4] = {density, density, density, 1};
-					testShader.SetVec4("albedo", col2);
-					glDrawArrays(GL_TRIANGLES, 0, 36);
-				}
-			}
-		}*/
-		
 		
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -359,7 +278,6 @@ int main() {
 	
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-	//glDeleteBuffers(1, &EBO);	
 	
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
@@ -405,20 +323,6 @@ void MouseCallback(GLFWwindow* window, double posX, double posY) {
 	float offsetY = posY - lastY;
 	lastX = posX;
 	lastY = posY;
-	/*yaw += offsetX;
-	pitch -= offsetY;
-	
-	if (pitch > 89.0f) {
-		pitch = 89.0f;
-	} else if (pitch < -89.0f) {
-		pitch = -89.0f;
-	}
-	
-	glm::vec3 dir = glm::vec3(0.0f);
-	dir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	dir.y = sin(glm::radians(pitch));
-	dir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	camForward = glm::normalize(dir);*/
 	
 	cam.ProcessMouse(offsetX, offsetY);
 }
