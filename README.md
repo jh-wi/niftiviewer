@@ -1,1 +1,1 @@
-MRIviewer is a cardiac meshing and visualization program.
+Cardiac meshing and visualization program for MRI (.nii) files.
