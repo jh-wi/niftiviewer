@@ -43,8 +43,6 @@ def ShowNii(path):
 	chunkSize = maxsize
 	imgcut = np.zeros((d,d,d))
 	
-	print("Volume size with padding: ", maxsize, "^3");
-	
 	print("Reading .nii file...")
 	for x in range(d):
 		for y in range(d):
@@ -54,12 +52,6 @@ def ShowNii(path):
 				else:
 					imgcut[x][y][z] = img[0][x][y][z]
 	
-	
-	
-	#print("Chunk size? ", end="")
-	#chunkSize = int(input())
-	
-	print("Chunking data...")
 	handle._SetChunkParams(chunkSize, d);
 	
 	for x in range(int(d/chunkSize)):
@@ -70,8 +62,6 @@ def ShowNii(path):
 					for b in range(chunkSize):
 						for c in range(chunkSize):
 							data[a*chunkSize*chunkSize+b*chunkSize+c] = imgcut[a+x*chunkSize][b+y*chunkSize][c+z*chunkSize]
-				print("Sending chunk (", x, ", ", y, ", ", z, ") to library...")
-				print(data)
 				handle._ReceiveChunk(data, chunkSize*chunkSize*chunkSize, x, y, z)
 	handle._window()
 	
